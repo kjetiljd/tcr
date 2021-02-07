@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+buildIt && (testIt && commitIt || revertIt)
