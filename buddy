@@ -3,5 +3,5 @@
 while(true);
   do
     fswatch -1 src;
-    tcr && success || failure;
+    tcr;
   done;
