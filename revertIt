@@ -3,4 +3,4 @@
 # git reset HEAD --hard
 # git checkout HEAD -- src/main/
 
-git stash drop 0 2&>/dev/null; git reset HEAD -- .; git add -A -- ':!src/main/' && git stash push --keep-index && git restore --staged -- ':!src/main/'
+git stash drop 0 2&>/dev/null; git add -A -- ':!src/main/' && git stash push --keep-index && git restore --staged -- ':!src/main/'
