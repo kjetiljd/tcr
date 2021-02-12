@@ -7,7 +7,7 @@ This is written for a Gradle Wrapper project, and used on MacOS.
 
 `tcr`: This is the gold.
 ```
-buildIt && (testIt && success && commitIt || (failure && revertIt))
+buildIt && (testIt && success && commitIt || (failure; revertIt))
 ```
 
 `buildIt`: Compile production and test code
