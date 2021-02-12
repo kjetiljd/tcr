@@ -20,7 +20,7 @@ buildIt && (testIt && success && commitIt || (failure; revertIt))
 git add -A && ./gradlew build || git reset HEAD -- .
 ```
 
-`commitIt`: Open the commit dialog. I use Arlo's Commit Notation.
+`commitIt`: Open the commit dialog. I use [Arlo's Commit Notation](https://github.com/arlobelshee/ArlosCommitNotation/blob/master/README.md).
 ```
 git commit
 ```
