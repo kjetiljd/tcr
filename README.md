@@ -1,7 +1,7 @@
 
 # test && commit || revert (TCR)
 
-TCR scripts - the way I do it. Inspired by [Kent](https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330) [Beck](https://medium.com/@kentbeck_7670/test-commit-revert-870bbd756864) and [Thomas Deniffel](https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3)
+TCR scripts - the way I do it. Inspired by [Kent](https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330) [Beck](https://medium.com/@kentbeck_7670/test-commit-revert-870bbd756864) and [Thomas Deniffel](https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3).
 
 This is written for a Gradle Wrapper project, and used on MacOS.
 
