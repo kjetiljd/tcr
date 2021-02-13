@@ -32,12 +32,12 @@ git stash drop 0 2&>/dev/null; git add -A -- ':!src/main/' && git stash push --k
 
 `success`: Notification when success - nice when using `buddy` below (uses a MacOS feature).
 ```
-osascript -e 'display notification "Success" with title "Completed" subtitle "win!" sound name "Ping"'
+osascript -e 'display notification "Success" with title "Completed" subtitle "win!" sound name "Basso"'
 ```
 
 `failure`: Notification when failure - nice when using `buddy` below (uses a MacOS feature).
 ```
-osascript -e 'display notification "Failure" with title "Incomplete" subtitle "wtf!" sound name "Sosumi"'
+osascript -e 'display notification "Failure" with title "Incomplete" subtitle "wtf!" sound name "Submarine"'
 exit 1
 ```
 
