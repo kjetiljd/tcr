@@ -12,12 +12,12 @@ buildIt && (testIt && success && commitIt || (failure; revertIt))
 
 `buildIt`: Compile production and test code
 ```
-./gradlew testClasses
+./mvnw test-classes
 ```
 
 `testIt`: Stage files and try to build with tests. Unstage if it fails.
 ```
-git add -A && ./gradlew build || git reset HEAD -- .
+git add -A && ./mvnw verify || git reset HEAD -- .
 ```
 
 `commitIt`: Open the commit dialog. I use [Arlo's Commit Notation](https://github.com/arlobelshee/ArlosCommitNotation/blob/master/README.md).
