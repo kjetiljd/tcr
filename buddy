@@ -2,6 +2,6 @@
 
 while(true);
   do
-    fswatch -1 src;
+    fswatch -1 src || echo "*** You need to install fswatch, I think. 'brew install fswatch'"
     tcr;
   done;

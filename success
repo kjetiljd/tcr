@@ -1,2 +1,2 @@
 #!/bin/bash
-osascript -e 'display notification "Success" with title "Completed" subtitle "win!" sound name "Ping"'
+osascript -e 'display notification "Success" with title "Completed" subtitle "win!" sound name "Submarine"'
