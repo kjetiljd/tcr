@@ -3,7 +3,7 @@
 
 TCR scripts - the way I do it. Inspired by [Kent](https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330) [Beck](https://medium.com/@kentbeck_7670/test-commit-revert-870bbd756864) and [Thomas Deniffel](https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3).
 
-This is written for a Gradle Wrapper project, and used on MacOS.
+This is written for projects with a supported build wrapper, and used on MacOS.
 
 `tcr`: This is the gold.
 ```
@@ -12,12 +12,23 @@ buildIt && (testIt && success && commitIt || (failure; revertIt))
 
 `buildIt`: Compile production and test code
 ```
-./gradlew testClasses
+buildTool compile
 ```
 
 `testIt`: Stage files and try to build with tests. Unstage if it fails.
 ```
-git add -A && ./gradlew build || git reset HEAD -- .
+git add -A && buildTool verify || git reset HEAD -- .
+```
+
+`buildTool`: Find the project build wrapper and run the TCR command for it.
+By default it auto-detects wrappers in this order:
+
+- `./gradlew`: `testClasses` for compile, `build` for verify
+- `./mvnw`: `test-compile` for compile, `verify` for verify
+
+Set `TCR_BUILD_TOOL` to force one when a project has multiple wrappers:
+```
+TCR_BUILD_TOOL=maven tcr
 ```
 
 `commitIt`: Open the commit dialog. I use [Arlo's Commit Notation](https://github.com/arlobelshee/ArlosCommitNotation/blob/master/README.md).

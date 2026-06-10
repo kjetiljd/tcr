@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+tool="${TCR_BUILD_TOOL:-}"
+
+if [[ -z "${tool}" ]]; then
+  [[ -x ./gradlew ]] && tool=gradle
+  [[ -z "${tool}" && -x ./mvnw ]] && tool=maven
+fi
+
+case "${tool}:$1" in
+  gradle:compile) ./gradlew testClasses ;;
+  gradle:verify) ./gradlew build ;;
+  maven:compile) ./mvnw test-compile ;;
+  maven:verify) ./mvnw verify ;;
+  :*) echo "No supported build wrapper found. Expected ./gradlew or ./mvnw." >&2; exit 1 ;;
+  *) echo "Usage: buildTool compile|verify, with optional TCR_BUILD_TOOL=gradle|maven" >&2; exit 1 ;;
+esac
