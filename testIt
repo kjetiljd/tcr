@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
 
-git add -A && buildTool verify || git reset HEAD -- .
+git add -A || exit 1
+
+if buildTool verify; then
+  exit 0
+fi
+
+git reset HEAD -- .
+exit 1

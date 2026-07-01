@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-while(true);
-  do
-    git pull --rebase --autostash;
-    git push;
-    sleep 30;
-  done;
+while true; do
+  if git pull --rebase --autostash; then
+    git push
+  fi
+
+  sleep 30
+done

@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-# git reset HEAD --hard
-# git checkout HEAD -- src/main/
+prod_path="${TCR_PROD_PATH:-src/main}"
+stash_message="${TCR_STASH_MESSAGE:-tcr-revert-backup}"
 
-git stash drop 0 2&>/dev/null; git add -A -- ':!src/main/' && git stash push --keep-index && git restore --staged -- ':!src/main/'
+if git diff --quiet -- "${prod_path}" && git diff --cached --quiet -- "${prod_path}"; then
+  exit 0
+fi
+
+git stash push -m "${stash_message}" -- "${prod_path}"

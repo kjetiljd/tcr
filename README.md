@@ -1,72 +1,43 @@
 
 # test && commit || revert (TCR)
 
-TCR scripts - the way I do it. Inspired by [Kent](https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330) [Beck](https://medium.com/@kentbeck_7670/test-commit-revert-870bbd756864) and [Thomas Deniffel](https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3).
+TCR scripts - the way I do it. Inspired by [Kent Beck's Limbo on the Cheap](https://medium.com/@kentbeck_7670/limbo-on-the-cheap-e4cfae840330), [Test && Commit || Revert](https://medium.com/@kentbeck_7670/test-commit-revert-870bbd756864), and [Thomas Deniffel](https://medium.com/@tdeniffel/tcr-variants-test-commit-revert-bf6bd84b17d3).
 
 This is written for projects with a supported build wrapper, and used on MacOS.
 
-`tcr`: This is the gold.
-```
-buildIt && (testIt && success && commitIt || (failure; revertIt))
-```
+## Workflow
 
-`buildIt`: Compile production and test code
-```
-buildTool compile
-```
+`tcr` is the main command. It compiles, verifies, commits on a green run, and notifies plus reverts production-code changes on a red run.
 
-`testIt`: Stage files and try to build with tests. Unstage if it fails.
-```
-git add -A && buildTool verify || git reset HEAD -- .
-```
+## Scripts
 
-`buildTool`: Find the project build wrapper and run the TCR command for it.
-By default it auto-detects wrappers in this order:
+- `buildIt`: Compiles production and test code through `buildTool`.
+- `testIt`: Stages current changes, runs verification, and unstages changes before returning failure when verification fails.
+- `buildTool`: Finds the project build wrapper and runs the matching TCR command.
+- `commitIt`: Opens the commit dialog. I use [Arlo's Commit Notation](https://github.com/arlobelshee/ArlosCommitNotation/blob/master/README.md).
+- `revertIt`: Preserves non-production changes, stashes reverted production changes with the `tcr-revert-backup` message, and uses `TCR_PROD_PATH` to identify production code.
+- `success`: Sends a MacOS success notification.
+- `failure`: Sends a MacOS failure notification and exits nonzero.
+- `buddy`: Waits for a file change under `TCR_WATCH_PATH` before running `tcr`. Requires `fswatch`.
+- `collab`: Repeatedly pulls with rebase/autostash, pushes only after a successful pull, then sleeps for 30 seconds.
+
+## Build wrappers
+
+`buildTool` auto-detects wrappers in this order:
 
 - `./gradlew`: `testClasses` for compile, `build` for verify
 - `./mvnw`: `test-compile` for compile, `verify` for verify
 
 Set `TCR_BUILD_TOOL` to force one when a project has multiple wrappers:
+
 ```
 TCR_BUILD_TOOL=maven tcr
 ```
 
-`commitIt`: Open the commit dialog. I use [Arlo's Commit Notation](https://github.com/arlobelshee/ArlosCommitNotation/blob/master/README.md).
-```
-git commit
-```
+## Project layout
 
-`revertIt`: I only revert the production code changes. I also put them in a stash - just in case.
-```
-git stash drop 0 2&>/dev/null; git add -A -- ':!src/main/' && git stash push --keep-index && git restore --staged -- ':!src/main/'
-```
+The default layout is a JVM-style project with watched files under `src` and production code under `src/main`. Override these when a project uses another layout:
 
-`success`: Notification when success - nice when using `buddy` below (uses a MacOS feature).
-```
-osascript -e 'display notification "Success" with title "Completed" subtitle "win!" sound name "Basso"'
-```
-
-`failure`: Notification when failure - nice when using `buddy` below (uses a MacOS feature).
-```
-osascript -e 'display notification "Failure" with title "Incomplete" subtitle "wtf!" sound name "Submarine"'
-exit 1
-```
-
-`buddy`: Run TCR on save. A really strict buddy that keeps you on the straight and narrow. (`brew install fswatch` needed)
-```
-while(true);
-  do
-    fswatch -1 src;
-    tcr;
-  done;
-```
-
-`collab`: Continuous integration.
-```
-while(true);
-  do
-    git pull --rebase;
-    git push;
-    sleep 30;
-  done;
-```
+- `TCR_WATCH_PATH`: path watched by `buddy`; defaults to `src`.
+- `TCR_PROD_PATH`: path treated as production code by `revertIt`; defaults to `src/main`.
+- `TCR_STASH_MESSAGE`: stash message used by `revertIt`; defaults to `tcr-revert-backup`.
